@@ -74,6 +74,108 @@ class ExampleModel(Base):
     name = Column(String)
 
 ```
+## Optimizando el modelo Naive Bayes
+
+### MultinomialNB
+
+El modelo Multinomial Naive Bayes es adecuado para datos que representan frecuencias de eventos (como el conteo de palabras en un texto). Es muy utilizado en tareas de clasificación de texto.
+
+#### **Hiperparametros**
+
+```py
+from sklearn.naive_bayes import MultinomialNB
+
+model = MultinomialNB(alpha=1.0)
+model = MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
+
+```
+
+`alpha`:
+
+  - Descripción: Este es el parámetro de suavizado de Laplace o suavizado de Lidstone. Controla la cantidad de suavizado que se aplica para evitar que probabilidades se vuelvan cero por la ausencia de algunas características.
+  - Valores típicos:
+    - alpha=1.0 (por defecto): Aplica suavizado de Laplace.
+    - Si alpha=0.0, no hay suavizado (pero esto puede causar problemas si alguna palabra o característica no aparece en los datos de entrenamiento).
+    - Valores menores a 1 reducen el nivel de suavizado, valores mayores a 1 aumentan el suavizado.
+  - Uso: Se ajusta para evitar problemas con datos escasos o de baja frecuencia. En clasificación de texto, ayuda a que el modelo maneje mejor las palabras raras.
+
+`fit_prior`:
+
+  - Descripción: Indica si se debe aprender las probabilidades previas (priors) de las clases a partir de los datos.
+  - Valores:
+    - True (por defecto): Se calculan las probabilidades de clase según la frecuencia de las clases en los datos.
+    - False: Se asumen probabilidades de clase uniformes.
+
+`class_prior`:
+
+  - Descripción: Puedes definir manualmente las probabilidades previas de las clases.
+  - Valores:
+    - Por defecto es None, y se calculan automáticamente a partir de los datos. Si defines un arreglo de probabilidades aquí, se usará en lugar de los valores calculados.
+
+### GaussianNB
+
+El modelo Gaussian Naive Bayes es adecuado para datos continuos que siguen una distribución normal o gaussiana. Se usa mucho en aplicaciones donde las características son valores continuos en lugar de frecuencias o conteos.
+
+#### **Hiperparametros**
+
+```py
+from sklearn.naive_bayes import GaussianNB
+
+model = GaussianNB(priors=None)
+model = GaussianNB(var_smoothing=1e-9)
+
+```
+
+`priors`:
+
+  - Descripción: Puedes especificar las probabilidades previas para las clases. Si no se especifican, se calculan a partir de los datos.
+  - Valores:
+    - Por defecto es None (las probabilidades se estiman de los datos).
+    - Si lo defines, debe ser un arreglo con las probabilidades para cada clase.
+
+`var_smoothing`:
+
+  - Descripción: Añade una pequeña cantidad a la varianza calculada de cada característica para evitar divisiones por cero en la probabilidad de la distribución gaussiana.
+  - Valores típicos:
+    - var_smoothing=1e-9 (por defecto): Se suma una pequeña constante a la varianza de cada característica.
+    - Este valor puede ajustarse si los datos son muy sensibles o si las características tienen varianzas muy pequeñas.
+
+### BernoulliNB
+
+El modelo Bernoulli Naive Bayes es adecuado para datos binarios (0 y 1), donde las características representan la presencia o ausencia de algún evento (por ejemplo, si una palabra está presente o no en un documento).
+
+#### **Hiperparametros**
+
+```py
+from sklearn.naive_bayes import BernoulliNB
+
+model = BernoulliNB(alpha=1.0)
+model = BernoulliNB(alpha=1.0, binarize=0.0)
+
+```
+`alpha`:
+
+  - Descripción: Controla el suavizado de Laplace, similar al MultinomialNB.
+  - Valores típicos:
+    - alpha=1.0 (por defecto): Suavizado de Laplace.
+    - Se puede ajustar para manejar características de baja frecuencia, igual que en MultinomialNB.
+
+`binarize`:
+
+  - Descripción: Este parámetro es importante para convertir automáticamente las características en valores binarios (0 y 1). Cualquier valor superior a binarize se convierte en 1, y cualquier valor inferior o igual se convierte en 0.
+  - Valores:
+    - binarize=0.0 (por defecto): Se asume que las características ya están binarizadas.
+    - Puedes ajustar este valor si los datos no son estrictamente binarios.
+
+`fit_prior`:
+
+  - Igual que en MultinomialNB, indica si se deben ajustar las probabilidades previas de las clases.
+  - Valores: True (por defecto) o False.
+
+`class_prior`:
+
+  - Igual que en MultinomialNB, puedes especificar manualmente las probabilidades previas de las clases.
+
 
 ## Trabajando con Datos
 

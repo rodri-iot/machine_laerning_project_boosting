@@ -76,6 +76,109 @@ class ExampleModel(Base):
 
 ```
 
+## Optimizing the Naive Bayes model
+
+### MultinomialNB
+
+The Multinomial Naive Bayes model is suitable for data that represents event frequencies (such as word counts in a text). It is widely used in text classification tasks.
+
+#### **Hyperparameters**
+
+```py
+from sklearn.naive_bayes import MultinomialNB
+
+model = MultinomialNB(alpha=1.0)
+model = MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
+
+```
+
+`alpha`:
+
+- Description: This is the Laplace smoothing or Lidstone smoothing parameter. It controls the amount of smoothing that is applied to prevent probabilities from becoming zero due to the absence of some features.
+- Typical values:
+- alpha=1.0 (default): Applies Laplace smoothing.
+- If alpha=0.0, there is no smoothing (but this can cause problems if some word or feature does not appear in the training data).
+- Values ​​less than 1 reduce the level of smoothing, values ​​greater than 1 increase the smoothing.
+- Usage: Fits to avoid problems with sparse or low-frequency data. In text classification, it helps the model better handle rare words.
+
+`fit_prior`:
+
+- Description: Indicates whether to learn class prior probabilities from the data.
+- Values:
+- True (default): Class probabilities are calculated based on the frequency of the classes in the data.
+- False: Uniform class probabilities are assumed.
+
+`class_prior`:
+
+- Description: You can manually define class prior probabilities.
+- Values:
+- Default is None, and they are automatically calculated from the data. If you define an array of probabilities here, it will be used instead of the calculated values.
+
+### GaussianNB
+
+The Gaussian Naive Bayes model is suitable for continuous data that follows a normal or Gaussian distribution. It is widely used in applications where the features are continuous values ​​rather than frequencies or counts.
+
+#### **Hyperparameters**
+
+```py
+from sklearn.naive_bayes import GaussianNB
+
+model = GaussianNB(priors=None)
+model = GaussianNB(var_smoothing=1e-9)
+
+```
+
+`priors`:
+
+- Description: You can specify prior probabilities for classes. If not specified, they are calculated from the data.
+- Values:
+- Default is None (probabilities are estimated from the data).
+- If you define it, it must be an array with the probabilities for each class.
+
+`var_smoothing`:
+
+- Description: Adds a small amount to the calculated variance of each feature to avoid divisions by zero in the Gaussian distribution probability.
+- Typical values:
+- var_smoothing=1e-9 (default): A small constant is added to the variance of each feature.
+- This value can be adjusted if the data is very sensitive or if the features have very small variances.
+
+### BernoulliNB
+
+The Bernoulli Naive Bayes model is suitable for binary data (0 and 1), where the features represent the presence or absence of some event (for example, whether a word is present or not in a document).
+
+#### **Hyperparameters**
+
+```py
+from sklearn.naive_bayes import BernoulliNB
+
+model = BernoulliNB(alpha=1.0)
+model = BernoulliNB(alpha=1.0, binarize=0.0)
+
+```
+`alpha`:
+
+- Description: Controls Laplace smoothing, similar to MultinomialNB.
+- Typical values:
+- alpha=1.0 (default): Laplace smoothing.
+- Can be tuned to handle low frequency features, same as MultinomialNB.
+
+`binarize`:
+
+- Description: This parameter is important to automatically convert features to binary values ​​(0 and 1). Any value greater than binarize becomes 1, and any value less than or equal to it becomes 0.
+- Values:
+- binarize=0.0 (default): Features are assumed to be already binarized.
+- You can adjust this value if the data is not strictly binary.
+
+`fit_prior`:
+
+- Same as in MultinomialNB, indicates whether to adjust the prior probabilities of the classes.
+- Values: True (default) or False.
+
+`class_prior`:
+
+- Same as in MultinomialNB, you can manually specify the prior probabilities of the classes.
+
+
 ## Working with Data
 
 You can place your raw datasets in the data/raw directory, intermediate datasets in data/interim, and the processed datasets ready for analysis in data/processed.
